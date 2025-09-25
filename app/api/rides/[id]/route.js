@@ -1,7 +1,7 @@
 // app/api/rides/[id]/route.js
 import { NextResponse } from "next/server";
-import { requireAuth } from "../../../lib/requireAuth";
-import { getRideById, updateRide, deleteRide } from "../../../services/rideService";
+import { requireAuth } from "../../../../lib/requireAuth";
+import { getRideById, updateRide, deleteRide } from "../../../../services/rideService";
 
 export async function GET(req, { params }) {
   try {

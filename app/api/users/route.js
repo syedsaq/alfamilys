@@ -1,6 +1,6 @@
 // app/api/users/route.js
 import { NextResponse } from "next/server";
-import { requireAuth } from "../../../lib/requireAuth";
+import { requireAuth } from "../../../../lib/requireAuth";
 import { listUsers } from "../../../services/userService";
 import * as yup from "yup";
 import { validateBody } from "../../../lib/validate";
