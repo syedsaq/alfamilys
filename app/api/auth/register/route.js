@@ -1,6 +1,8 @@
 import  Connectdb  from "../../../../lib/dbConnect";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
+import { generateOtp } from "../../../../lib/otp";
+import { sendEmail } from "../../../../lib/mailer";
 
 
 export async function POST(req) {
@@ -58,9 +60,22 @@ export async function POST(req) {
       })
     });
 
+    // ✅ Generate OTP
+    const { otp, hashedOtp, expiresAt } = await generateOtp(newUser._id);
+    newUser.otp = hashedOtp;
+    newUser.otpExpiresAt = expiresAt;
+    await newUser.save();
+
+    // ✅ Send OTP email
+    await sendEmail(
+      newUser.email,
+      "Your OTP Code",
+      `Hello ${newUser.fullName},\n\nYour OTP is: ${otp}\nIt will expire in 5 minutes.`
+    );
+
     return new Response(JSON.stringify({ 
-      message: "User registered successfully", 
-      user: { id: newUser._id, email: newUser.email, role: newUser.role } 
+      message: "User registered successfully. OTP sent to email.", 
+      userId: newUser._id 
     }), { status: 201 });
 
   } catch (error) {

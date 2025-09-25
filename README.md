@@ -34,31 +34,42 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-my-next-api/
-├─ app/
-│  └─ api/
-│     ├─ auth/
-│     │  ├─ register/route.js
-│     │  └─ login/route.js
-│     ├─ users/
-│     │  └─ route.js
-│     └─ users/
-│        └─ [id]/route.js
-│     ├─ rides/
-│     │  └─ route.js
-│     └─ rides/
-│        └─ [id]/route.js
-├─ lib/
-│  ├─ db.js
-│  ├─ jwt.js
-│  └─ validate.js
-├─ models/
-│  ├─ User.js
-│  └─ Ride.js
-├─ services/
-│  ├─ authService.js
-│  ├─ userService.js
-│  └─ rideService.js
-├─ middleware.js
-├─ package.json
-└─ .env.local.example
+viper43@viper43-MS-7D35:~/Documents/saqlainv8/alfamilys$ tree -L 3 -I "node_modules|.next"
+.
+├── app
+│   ├── api
+│   │   ├── auth
+│   │   ├── rides
+│   │   └── users
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.js
+│   └── page.js
+├── jsconfig.json
+├── lib
+│   ├── dbConnect.js
+│   ├── jwt.js
+│   ├── mailer.js
+│   ├── otp.js
+│   ├── requireAuth.js
+│   └── validate.js
+├── middleware.js
+├── models
+│   ├── Otp.js
+│   ├── Ride.js
+│   └── User.js
+├── next.config.mjs
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+└── services
+    ├── authService.js
+    ├── rideService.js
+    └── userService.js
