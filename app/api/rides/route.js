@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "../../../../lib/requireAuth";
 import * as yup from "yup";
-import { validateBody } from "../../../lib/validate";
+import { validateBody } from "../../../../lib/validate";
 import { createRide, listRides } from "../../../../services/rideService";
 
 const createSchema = yup.object({
