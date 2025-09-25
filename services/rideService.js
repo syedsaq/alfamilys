@@ -1,6 +1,6 @@
 // services/rideService.js
 import Ride from "../models/Ride";
-import { connectDB } from "@/lib/dbConnect";
+import connectDB  from "@/lib/dbConnect";
 import mongoose from "mongoose";
 
 export async function createRide({ riderId, pickup, dropoff }) {
