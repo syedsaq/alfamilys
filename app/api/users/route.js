@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { listUsers } from "../../../services/userService";
 import * as yup from "yup";
 import { validateBody } from "../../../lib/validate";
-import { connectDB } from "../../../lib/dbConnect";
+import connectDB  from "@/lib/dbConnect";
 import User from "../../../models/User";
 import bcrypt from "bcryptjs";
 import requireAuth from "@/lib/requireAuth";
