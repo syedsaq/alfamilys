@@ -1,12 +1,13 @@
 // app/api/users/route.js
 import { NextResponse } from "next/server";
-import { requireAuth } from "../../../../lib/requireAuth";
+//import { requireAuth } from "../../../../lib/requireAuth";
 import { listUsers } from "../../../services/userService";
 import * as yup from "yup";
 import { validateBody } from "../../../lib/validate";
 import { connectDB } from "../../../lib/dbConnect";
 import User from "../../../models/User";
 import bcrypt from "bcryptjs";
+import requireAuth from "@/lib/requireAuth";
 
 const createSchema = yup.object({
   name: yup.string().required(),

@@ -1,9 +1,12 @@
 // app/api/rides/route.js
 import { NextResponse } from "next/server";
-import { requireAuth } from "../../../../lib/requireAuth";
+//import { requireAuth } from "../../../../lib/requireAuth";
 import * as yup from "yup";
-import { validateBody } from "../../../../lib/validate";
-import { createRide, listRides } from "../../../../services/rideService";
+//import { validateBody } from "../../../../lib/validate";
+i//mport { createRide, listRides } from "../../../../services/rideService";
+import requireAuth from "@/lib/requireAuth";
+import validateBody from "@/lib/validate";
+import { createRide, listRides }  from "@/services/rideService";
 
 const createSchema = yup.object({
   pickup: yup.string().required(),
