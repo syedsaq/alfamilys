@@ -1,7 +1,7 @@
 // app/api/auth/login/route.js
 import { NextResponse } from "next/server";
 import * as yup from "yup";
-import { validateBody } from "../../../../lib/validate";
+import validateBody from "@/lib/validate";
 import { login } from "../../../../services/authService";
 
 const schema = yup.object({
