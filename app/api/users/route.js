@@ -16,6 +16,25 @@ const createSchema = yup.object({
   role: yup.string().oneOf(["user", "driver", "admin"]).default("user"),
 });
 
+
+export async function GET(req) {
+  try {
+    const payload = await requireAuth(req); // { sub, role, email }
+    await Connectdb();
+
+    const user = await User.findById(payload.sub).select("-password");
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: user });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err.message },
+      { status: err.status || 401 }
+    );
+  }
+}
 export async function GET(req) {
   try {
     await requireAuth(req, ["admin"]);

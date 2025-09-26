@@ -44,7 +44,7 @@ export async function POST(req) {
     return new Response(
       JSON.stringify({
         message: "OTP verified successfully",
-        token,
+      
         user: { id: user._id, email: user.email, role: user.role, fullName: user.fullName },
       }),
       { status: 200 }

@@ -1,6 +1,7 @@
 // app/api/users/[id]/route.js
 import { NextResponse } from "next/server";
-import { requireAuth } from "../../../../lib/requireAuth";
+import requireAuth from "@/lib/requireAuth";
+
 import { getUserById, updateUser, deleteUser } from "../../../../services/userService";
 
 export async function GET(req, { params }) {
