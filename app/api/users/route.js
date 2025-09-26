@@ -35,15 +35,15 @@ export async function GET(req) {
     );
   }
 }
-export async function GET(req) {
-  try {
-    await requireAuth(req, ["admin"]);
-    const users = await listUsers();
-    return NextResponse.json({ data: users });
-  } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: err.status || 401 });
-  }
-}
+// export async function GET(req) {
+//   try {
+//     await requireAuth(req, ["admin"]);
+//     const users = await listUsers();
+//     return NextResponse.json({ data: users });
+//   } catch (err) {
+//     return NextResponse.json({ error: err.message }, { status: err.status || 401 });
+//   }
+// }
 
 export async function POST(req) {
   try {
