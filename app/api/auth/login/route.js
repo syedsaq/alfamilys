@@ -18,7 +18,12 @@ export async function POST(req) {
     if (!isMatch) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
-
+   if (!user.isVerified) {
+      return NextResponse.json(
+        { error: "User not verified. Please verify your account first." },
+        { status: 403 }
+      );
+    }
     // ✅ Generate JWT with sub claim
     const token = await signJwt(
       {
