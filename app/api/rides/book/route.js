@@ -1,70 +1,84 @@
 import { NextResponse } from "next/server";
 import Connectdb from "@/lib/dbConnect";
+import requireAuth from "@/lib/requireAuth";
 import Ride from "@/models/Ride";
 import User from "@/models/User";
 import Booking from "@/models/Booking";
-import requireAuth from "@/lib/requireAuth";
-import { sendEmail } from "@/lib/mailer";
 
 export async function POST(req) {
   try {
     await Connectdb();
 
-    // 🔒 Auth
+    // ✅ Auth
     const payload = await requireAuth(req);
     const userId = payload.sub;
 
-    // ✅ Check role
-    const user = await User.findById(userId).select("role fullName email");
-    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
-    if (user.role !== "rider") {
-      return NextResponse.json({ error: "Only riders can request seats" }, { status: 403 });
-    }
-
-    // ✅ Parse request
+    // ✅ Parse Body
     const body = await req.json();
-    const { rideId } = body;
+    const { offerRideId, requestRideId } = body;
 
-    if (!rideId) {
-      return NextResponse.json({ error: "rideId is required" }, { status: 400 });
+    if (!offerRideId || !requestRideId) {
+      return NextResponse.json(
+        { error: "offerRideId and requestRideId are required" },
+        { status: 400 }
+      );
     }
 
-    // ✅ Find ride offer
-    const ride = await Ride.findById(rideId).populate("driver", "fullName email");
-    if (!ride || ride.rideType !== "offer") {
-      return NextResponse.json({ error: "Ride offer not found" }, { status: 404 });
+    // ✅ Find Offer Ride (Driver)
+    const offerRide = await Ride.findById(offerRideId);
+    if (!offerRide)
+      return NextResponse.json({ error: "Offer ride not found" }, { status: 404 });
+
+    // ✅ Find Request Ride (Rider)
+    const requestRide = await Ride.findById(requestRideId);
+    if (!requestRide)
+      return NextResponse.json({ error: "Request ride not found" }, { status: 404 });
+
+    // ✅ Prevent same user booking their own ride
+    if (offerRide.driver.toString() === userId) {
+      return NextResponse.json(
+        { error: "You cannot book your own ride" },
+        { status: 403 }
+      );
     }
 
-    // ✅ Use rider’s originally requested seats
-    const seatsRequested = ride.requestedSeats || 1;
-
-    if (ride.availableSeats < seatsRequested) {
-      return NextResponse.json({ error: "Not enough available seats" }, { status: 400 });
+    // ✅ Check available seats
+    if (offerRide.availableSeats <= 0) {
+      return NextResponse.json(
+        { error: "No seats available in this ride" },
+        { status: 400 }
+      );
     }
 
-    // ✅ Create booking
+    const seatsToBook = requestRide.requestedSeats || 1;
+
+    if (offerRide.availableSeats < seatsToBook) {
+      return NextResponse.json(
+        { error: "Not enough seats available" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Create Booking
     const booking = await Booking.create({
-      ride: ride._id,
-      rider: userId,
-      seats: seatsRequested,
+      offerRideId,
+      requestRideId,
+      riderId: userId,
+      driverId: offerRide.driver,
+      seatsBooked: seatsToBook,
+      notes: requestRide.notes || "",
+      driverNotified: true, // 🔔 notify driver of new booking
     });
 
     // ✅ Update available seats
-    ride.availableSeats -= seatsRequested;
-    await ride.save();
-
-    // ✅ Notify driver
-    await sendEmail(
-      ride.driver.email,
-      "New Ride Booking Request",
-      `Hello ${ride.driver.fullName},\n\n${user.fullName} requested ${seatsRequested} seat(s) on your ride.\n\nRide ID: ${ride._id}`
-    );
+    offerRide.availableSeats -= seatsToBook;
+    await offerRide.save();
 
     return NextResponse.json({
-      message: "Seat request sent successfully ✅",
+      message: "Seat booked successfully 🚗",
       booking,
     });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: err.status || 500 });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
