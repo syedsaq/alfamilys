@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+const locationSchema = new mongoose.Schema({
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
+  address: { type: String, required: true }, // 👈 new field added
+});
+
 const rideSchema = new mongoose.Schema(
   {
     rideType: {
@@ -9,12 +15,12 @@ const rideSchema = new mongoose.Schema(
     },
 
     pickupLocation: {
-      latitude: { type: Number, required: true },
-      longitude: { type: Number, required: true },
+     type: locationSchema,
+      required: true,
     },
     dropLocation: {
-      latitude: { type: Number, required: true },
-      longitude: { type: Number, required: true },
+       type: locationSchema,
+      required: true,
     },
     dateTime: { type: Date, required: true },
 
